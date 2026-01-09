@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: datadrift
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/datadrift
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      pool-name: DataDriftHikariPool
+
+logging:
+  level:
+    root: INFO
+    com.datadrift: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

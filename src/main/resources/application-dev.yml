@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/datadrift_dev
+    username: postgres
+    password: postgres
+
+logging:
+  level:
+    com.datadrift: DEBUG
+    org.springframework: DEBUG

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.datadrift.com/xml/ns/dbchangelog"
+           xmlns:dd="http://www.datadrift.com/xml/ns/dbchangelog"
+           elementFormDefault="qualified">
+
+    <!-- Root Element -->
+    <xs:element name="databaseChangeLog">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="changeSet" type="dd:changeSetType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- ChangeSet Type -->
+    <xs:complexType name="changeSetType">
+        <xs:sequence>
+            <xs:element name="comment" type="xs:string" minOccurs="0"/>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="createTable" type="dd:createTableType"/>
+                <xs:element name="dropTable" type="dd:dropTableType"/>
+                <xs:element name="addColumn" type="dd:addColumnType"/>
+                <xs:element name="dropColumn" type="dd:dropColumnType"/>
+                <xs:element name="modifyColumn" type="dd:modifyColumnType"/>
+                <xs:element name="renameColumn" type="dd:renameColumnType"/>
+                <xs:element name="createIndex" type="dd:createIndexType"/>
+                <xs:element name="dropIndex" type="dd:dropIndexType"/>
+                <xs:element name="addForeignKey" type="dd:addForeignKeyType"/>
+                <xs:element name="dropForeignKey" type="dd:dropForeignKeyType"/>
+                <xs:element name="addPrimaryKey" type="dd:addPrimaryKeyType"/>
+                <xs:element name="dropPrimaryKey" type="dd:dropPrimaryKeyType"/>
+                <xs:element name="addUniqueConstraint" type="dd:addUniqueConstraintType"/>
+                <xs:element name="dropUniqueConstraint" type="dd:dropUniqueConstraintType"/>
+                <xs:element name="sql" type="dd:sqlType"/>
+                <xs:element name="insert" type="dd:insertType"/>
+                <xs:element name="update" type="dd:updateType"/>
+                <xs:element name="delete" type="dd:deleteType"/>
+            </xs:choice>
+            <xs:element name="rollback" type="dd:rollbackType" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="author" type="xs:string" use="required"/>
+        <xs:attribute name="runAlways" type="xs:boolean" default="false"/>
+        <xs:attribute name="runOnChange" type="xs:boolean" default="false"/>
+        <xs:attribute name="failOnError" type="xs:boolean" default="true"/>
+        <xs:attribute name="context" type="xs:string"/>
+        <xs:attribute name="labels" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Rollback Type -->
+    <xs:complexType name="rollbackType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="createTable" type="dd:createTableType"/>
+            <xs:element name="dropTable" type="dd:dropTableType"/>
+            <xs:element name="addColumn" type="dd:addColumnType"/>
+            <xs:element name="dropColumn" type="dd:dropColumnType"/>
+            <xs:element name="modifyColumn" type="dd:modifyColumnType"/>
+            <xs:element name="renameColumn" type="dd:renameColumnType"/>
+            <xs:element name="createIndex" type="dd:createIndexType"/>
+            <xs:element name="dropIndex" type="dd:dropIndexType"/>
+            <xs:element name="addForeignKey" type="dd:addForeignKeyType"/>
+            <xs:element name="dropForeignKey" type="dd:dropForeignKeyType"/>
+            <xs:element name="addPrimaryKey" type="dd:addPrimaryKeyType"/>
+            <xs:element name="dropPrimaryKey" type="dd:dropPrimaryKeyType"/>
+            <xs:element name="addUniqueConstraint" type="dd:addUniqueConstraintType"/>
+            <xs:element name="dropUniqueConstraint" type="dd:dropUniqueConstraintType"/>
+            <xs:element name="sql" type="dd:sqlType"/>
+            <xs:element name="insert" type="dd:insertType"/>
+            <xs:element name="update" type="dd:updateType"/>
+            <xs:element name="delete" type="dd:deleteType"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <!-- Column Type -->
+    <xs:complexType name="columnType">
+        <xs:sequence>
+            <xs:element name="constraints" type="dd:constraintsType" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="type" type="xs:string" use="required"/>
+        <xs:attribute name="defaultValue" type="xs:string"/>
+        <xs:attribute name="defaultValueBoolean" type="xs:boolean"/>
+        <xs:attribute name="defaultValueNumeric" type="xs:decimal"/>
+        <xs:attribute name="defaultValueComputed" type="xs:string"/>
+        <xs:attribute name="autoIncrement" type="xs:boolean" default="false"/>
+        <xs:attribute name="remarks" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Constraints Type -->
+    <xs:complexType name="constraintsType">
+        <xs:attribute name="nullable" type="xs:boolean" default="true"/>
+        <xs:attribute name="primaryKey" type="xs:boolean" default="false"/>
+        <xs:attribute name="primaryKeyName" type="xs:string"/>
+        <xs:attribute name="unique" type="xs:boolean" default="false"/>
+        <xs:attribute name="uniqueConstraintName" type="xs:string"/>
+        <xs:attribute name="references" type="xs:string"/>
+        <xs:attribute name="referencedTableName" type="xs:string"/>
+        <xs:attribute name="referencedColumnNames" type="xs:string"/>
+        <xs:attribute name="foreignKeyName" type="xs:string"/>
+        <xs:attribute name="deleteCascade" type="xs:boolean" default="false"/>
+        <xs:attribute name="checkConstraint" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Create Table Type -->
+    <xs:complexType name="createTableType">
+        <xs:sequence>
+            <xs:element name="column" type="dd:columnType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+        <xs:attribute name="remarks" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Drop Table Type -->
+    <xs:complexType name="dropTableType">
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+        <xs:attribute name="cascadeConstraints" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+    <!-- Add Column Type -->
+    <xs:complexType name="addColumnType">
+        <xs:sequence>
+            <xs:element name="column" type="dd:columnType" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Drop Column Type -->
+    <xs:complexType name="dropColumnType">
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="columnName" type="xs:string" use="required"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Modify Column Type -->
+    <xs:complexType name="modifyColumnType">
+        <xs:sequence>
+            <xs:element name="column" type="dd:columnType"/>
+        </xs:sequence>
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Rename Column Type -->
+    <xs:complexType name="renameColumnType">
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+        <xs:attribute name="oldColumnName" type="xs:string" use="required"/>
+        <xs:attribute name="newColumnName" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <!-- Create Index Type -->
+    <xs:complexType name="createIndexType">
+        <xs:sequence>
+            <xs:element name="column" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="required"/>
+                    <xs:attribute name="descending" type="xs:boolean" default="false"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="indexName" type="xs:string" use="required"/>
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+        <xs:attribute name="unique" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+    <!-- Drop Index Type -->
+    <xs:complexType name="dropIndexType">
+        <xs:attribute name="indexName" type="xs:string" use="required"/>
+        <xs:attribute name="tableName" type="xs:string"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Add Foreign Key Type -->
+    <xs:complexType name="addForeignKeyType">
+        <xs:attribute name="constraintName" type="xs:string" use="required"/>
+        <xs:attribute name="baseTableName" type="xs:string" use="required"/>
+        <xs:attribute name="baseColumnNames" type="xs:string" use="required"/>
+        <xs:attribute name="referencedTableName" type="xs:string" use="required"/>
+        <xs:attribute name="referencedColumnNames" type="xs:string" use="required"/>
+        <xs:attribute name="baseTableSchemaName" type="xs:string"/>
+        <xs:attribute name="referencedTableSchemaName" type="xs:string"/>
+        <xs:attribute name="onDelete" type="dd:referentialActionType"/>
+        <xs:attribute name="onUpdate" type="dd:referentialActionType"/>
+        <xs:attribute name="deferrable" type="xs:boolean" default="false"/>
+        <xs:attribute name="initiallyDeferred" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+    <!-- Referential Action Type -->
+    <xs:simpleType name="referentialActionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CASCADE"/>
+            <xs:enumeration value="SET NULL"/>
+            <xs:enumeration value="SET DEFAULT"/>
+            <xs:enumeration value="RESTRICT"/>
+            <xs:enumeration value="NO ACTION"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Drop Foreign Key Type -->
+    <xs:complexType name="dropForeignKeyType">
+        <xs:attribute name="constraintName" type="xs:string" use="required"/>
+        <xs:attribute name="baseTableName" type="xs:string" use="required"/>
+        <xs:attribute name="baseTableSchemaName" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Add Primary Key Type -->
+    <xs:complexType name="addPrimaryKeyType">
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="columnNames" type="xs:string" use="required"/>
+        <xs:attribute name="constraintName" type="xs:string"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Drop Primary Key Type -->
+    <xs:complexType name="dropPrimaryKeyType">
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="constraintName" type="xs:string"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Add Unique Constraint Type -->
+    <xs:complexType name="addUniqueConstraintType">
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="columnNames" type="xs:string" use="required"/>
+        <xs:attribute name="constraintName" type="xs:string"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Drop Unique Constraint Type -->
+    <xs:complexType name="dropUniqueConstraintType">
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="constraintName" type="xs:string" use="required"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- SQL Type -->
+    <xs:complexType name="sqlType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="endDelimiter" type="xs:string" default=";"/>
+                <xs:attribute name="splitStatements" type="xs:boolean" default="true"/>
+                <xs:attribute name="stripComments" type="xs:boolean" default="true"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <!-- Insert Type -->
+    <xs:complexType name="insertType">
+        <xs:sequence>
+            <xs:element name="column" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="required"/>
+                    <xs:attribute name="value" type="xs:string"/>
+                    <xs:attribute name="valueNumeric" type="xs:decimal"/>
+                    <xs:attribute name="valueBoolean" type="xs:boolean"/>
+                    <xs:attribute name="valueDate" type="xs:string"/>
+                    <xs:attribute name="valueComputed" type="xs:string"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Update Type -->
+    <xs:complexType name="updateType">
+        <xs:sequence>
+            <xs:element name="column" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="required"/>
+                    <xs:attribute name="value" type="xs:string"/>
+                    <xs:attribute name="valueNumeric" type="xs:decimal"/>
+                    <xs:attribute name="valueBoolean" type="xs:boolean"/>
+                    <xs:attribute name="valueDate" type="xs:string"/>
+                    <xs:attribute name="valueComputed" type="xs:string"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="where" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Delete Type -->
+    <xs:complexType name="deleteType">
+        <xs:sequence>
+            <xs:element name="where" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="tableName" type="xs:string" use="required"/>
+        <xs:attribute name="schemaName" type="xs:string"/>
+    </xs:complexType>
+
+</xs:schema>
