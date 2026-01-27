@@ -4,21 +4,21 @@ A modern database change management tool built with Java and Spring Boot. DataDr
 
 ## Tech Stack
 
-- **Java**: 21 (LTS)
-- **Build Tool**: Maven 3.9+
-- **Framework**: Spring Boot 3.2+ (JDBC only)
+- **Java**: 21
+- **Build Tool**: Maven 3.9.8
+- **Framework**: Spring Boot 3.2.1 (JDBC only)
 - **Database**: PostgreSQL with JDBC and HikariCP connection pool
-- **CLI**: Picocli 4.7+
+- **CLI**: Picocli 4.7.5
 - **Logging**: SLF4J with Logback
-- **Testing**: JUnit 5, Mockito, Testcontainers (PostgreSQL), JMH (benchmarking)
-- **XML Parsing**: JAXB and Jackson XML
+- **Testing**: JUnit 5, Mockito, Testcontainers 1.19.3, JMH 1.37
+- **XML Parsing**: JAXB and Jackson XML 2.16.1
 - **CI/CD**: GitHub Actions
 
 ## Prerequisites
 
-- Java 21 or higher
-- Maven 3.9+
-- PostgreSQL 16+ (or Docker to run PostgreSQL)
+- Java 21
+- Maven 3.9.8
+- PostgreSQL (or Docker to run PostgreSQL)
 
 ## Getting Started
 
@@ -305,117 +305,31 @@ java -jar target/datadrift-1.0.0-SNAPSHOT.jar generate-sql
 java -jar target/datadrift-1.0.0-SNAPSHOT.jar tag --name=v1.0.0
 ```
 
+## Architecture
+
+DataDrift uses a clean, layered architecture:
+
+1. **CLI Layer** - Command-line interface (Picocli)
+2. **Service Layer** - Business logic and orchestration
+3. **Executor Layer** - SQL generation and execution
+4. **Repository Layer** - Database access (JdbcTemplate)
+5. **Model Layer** - Domain models and change types
+
+Key principles:
+- SQL injection prevention through secure builders
+- Database portability via dialect abstraction
+- Separation of concerns
+- Fully testable
+
 ## Running Tests
 
 ```bash
+# Run all tests
 mvn test
+
+# Run specific test
+mvn test -Dtest=CreateTableExecutorTest
 ```
-
-## Project Structure
-
-```
-DataDrift/
-├── src/
-│   ├── main/
-│   │   ├── java/com/datadrift/
-│   │   │   ├── DataDriftApplication.java    # Spring Boot application entry point
-│   │   │   │
-│   │   │   ├── cli/                          # CLI Commands (Picocli)
-│   │   │   │   ├── MigrateCommand.java       # Execute migrations
-│   │   │   │   ├── StatusCommand.java        # Show migration status
-│   │   │   │   ├── RollbackCommand.java      # Rollback migrations
-│   │   │   │   ├── ValidateCommand.java      # Validate changelog files
-│   │   │   │   └── GenerateSqlCommand.java   # Generate SQL preview
-│   │   │   │
-│   │   │   ├── config/                       # Spring Configuration
-│   │   │   │   └── (Spring Boot configs)
-│   │   │   │
-│   │   │   ├── model/                        # Domain Models
-│   │   │   │   ├── changelog/
-│   │   │   │   │   ├── ChangeSet.java        # Represents a changeset
-│   │   │   │   │   ├── DatabaseChangeLog.java # DATABASECHANGELOG table model
-│   │   │   │   │   └── DatabaseChangeLogLock.java # DATABASECHANGELOGLOCK table model
-│   │   │   │   └── change/
-│   │   │   │       ├── Change.java           # Interface for all change types
-│   │   │   │       ├── CreateTableChange.java
-│   │   │   │       ├── AddColumnChange.java
-│   │   │   │       ├── SqlChange.java
-│   │   │   │       └── ... (other change types)
-│   │   │   │
-│   │   │   ├── parser/                       # Changelog Parsers
-│   │   │   │   ├── xml/
-│   │   │   │   │   └── XmlChangelogParser.java
-│   │   │   │   └── yaml/
-│   │   │   │       └── YamlChangelogParser.java
-│   │   │   │
-│   │   │   ├── executor/                     # SQL Executors
-│   │   │   │   └── change/
-│   │   │   │       ├── ChangeExecutor.java   # Interface for executors
-│   │   │   │       ├── CreateTableExecutor.java
-│   │   │   │       ├── AddColumnExecutor.java
-│   │   │   │       ├── SqlExecutor.java
-│   │   │   │       └── ... (other executors)
-│   │   │   │
-│   │   │   ├── service/                      # Business Logic
-│   │   │   │   ├── MigrationService.java     # Orchestrates migrations
-│   │   │   │   ├── ChangelogParserService.java # Parses changelog files
-│   │   │   │   ├── ChangelogExecutorService.java # Executes changesets
-│   │   │   │   ├── RollbackService.java      # Handles rollbacks
-│   │   │   │   ├── ValidationService.java    # Validates changesets
-│   │   │   │   └── LockService.java          # Manages migration locks
-│   │   │   │
-│   │   │   ├── repository/                   # Data Access Layer
-│   │   │   │   ├── ChangelogRepository.java  # DATABASECHANGELOG CRUD
-│   │   │   │   └── LockRepository.java       # DATABASECHANGELOGLOCK CRUD
-│   │   │   │
-│   │   │   ├── exception/                    # Custom Exceptions
-│   │   │   │   ├── MigrationLockException.java
-│   │   │   │   ├── MigrationExecutionException.java
-│   │   │   │   └── ChangelogParseException.java
-│   │   │   │
-│   │   │   └── util/                         # Utilities
-│   │   │       └── ChecksumUtil.java         # MD5 checksum calculation
-│   │   │
-│   │   └── resources/
-│   │       ├── application.yml               # Main configuration
-│   │       ├── application-dev.yml           # Dev profile configuration
-│   │       └── db/
-│   │           ├── changelog/                # Migration files (XML/YAML)
-│   │           │   ├── example-001-create-users-table.xml
-│   │           │   └── example-002-create-products-table.yaml
-│   │           └── schema/
-│   │               └── tracking-tables.sql   # Tracking tables schema
-│   │
-│   └── test/
-│       ├── java/com/datadrift/              # Unit and integration tests
-│       └── resources/                        # Test resources
-│
-├── .github/
-│   └── workflows/
-│       └── ci.yml                            # GitHub Actions CI/CD
-│
-└── pom.xml                                   # Maven configuration
-```
-
-### Package Responsibilities
-
-**cli/** - Picocli command implementations. Each command delegates to appropriate service.
-
-**model/changelog/** - Domain models representing changesets and tracking tables.
-
-**model/change/** - Change type implementations (createTable, addColumn, etc.).
-
-**parser/** - Parsers that convert XML/YAML files into ChangeSet objects.
-
-**executor/** - Executors that generate and execute SQL for each change type.
-
-**service/** - Business logic layer that orchestrates parsing, validation, and execution.
-
-**repository/** - Data access layer using JdbcTemplate for tracking tables.
-
-**exception/** - Custom exceptions for migration errors.
-
-**util/** - Utility classes for checksums, etc.
 
 ## License
 

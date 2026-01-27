@@ -6,7 +6,7 @@ import com.datadrift.model.change.Change;
  * Interface for executing different types of database changes.
  * Each change type (createTable, addColumn, etc.) has its own executor implementation.
  */
-public interface ChangeExecutor {
+public interface ChangeExecutor<T extends Change> {
 
     /**
      * Execute a database change.
@@ -19,7 +19,7 @@ public interface ChangeExecutor {
      *
      * @param change The change to execute
      */
-    void execute(Change change);
+    void execute(T change);
 
     /**
      * Generate SQL for a change without executing it.
@@ -31,5 +31,5 @@ public interface ChangeExecutor {
      * @param change The change to generate SQL for
      * @return SQL statement(s)
      */
-    String generateSql(Change change);
+    String generateSql(T change);
 }
