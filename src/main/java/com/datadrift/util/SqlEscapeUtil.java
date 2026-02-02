@@ -30,8 +30,8 @@ public final class SqlEscapeUtil {
         }
         // Basic validation - allow common SQL expression characters
         // For production, consider more strict validation or use parameterized queries
-        if (expression.contains(";") || expression.toLowerCase().contains("--")) {
-            throw new IllegalArgumentException("Expression contains potentially dangerous SQL: " + expression);
+        if (expression.contains(";") || expression.toLowerCase().contains("--") || expression.contains("/*")) {
+            throw new IllegalArgumentException("Invalid SQL expression: " + expression);
         }
     }
 
