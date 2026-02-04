@@ -4,7 +4,6 @@ import lombok.Data;
 
 import java.util.List;
 
-import static com.datadrift.model.change.InsertChange.ColumnValue;
 
 @Data
 public class UpdateChange implements Change {

@@ -1,6 +1,5 @@
 package com.datadrift.model.change;
 
-import com.datadrift.model.change.InsertChange.ColumnValue;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

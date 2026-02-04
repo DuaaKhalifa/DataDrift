@@ -1,6 +1,6 @@
 package com.datadrift.executor.change;
 
-import com.datadrift.model.change.InsertChange.ColumnValue;
+import com.datadrift.model.change.ColumnValue;
 import com.datadrift.model.change.UpdateChange;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

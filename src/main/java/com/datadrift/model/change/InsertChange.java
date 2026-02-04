@@ -54,10 +54,4 @@ public class InsertChange implements Change {
         );
     }
 
-    @Data
-    public static class ColumnValue {
-        private String name;
-        private String value;
-        private String valueType;  // STRING, NUMERIC, BOOLEAN, NULL, TIMESTAMP, DATE
-    }
 }

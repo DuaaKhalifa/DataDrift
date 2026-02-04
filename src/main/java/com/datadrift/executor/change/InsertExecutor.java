@@ -1,7 +1,7 @@
 package com.datadrift.executor.change;
 
 import com.datadrift.model.change.InsertChange;
-import com.datadrift.model.change.InsertChange.ColumnValue;
+import com.datadrift.model.change.ColumnValue;
 import com.datadrift.util.SqlEscapeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
