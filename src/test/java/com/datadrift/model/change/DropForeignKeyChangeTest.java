@@ -4,24 +4,24 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DropForeignKeyConstraintChangeTest {
+class DropForeignKeyChangeTest {
 
     @Test
     void testGetChangeType() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
 
         // When
         String result = change.getChangeType();
 
         // Then
-        assertEquals("dropForeignKeyConstraint", result);
+        assertEquals("dropForeignKey", result);
     }
 
     @Test
     void testValidate_Success() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
 
@@ -32,7 +32,7 @@ class DropForeignKeyConstraintChangeTest {
     @Test
     void testValidate_Success_WithSchema() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseSchemaName("public");
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
@@ -44,7 +44,7 @@ class DropForeignKeyConstraintChangeTest {
     @Test
     void testValidate_Success_WithCascade() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
         change.setCascade(true);
@@ -56,7 +56,7 @@ class DropForeignKeyConstraintChangeTest {
     @Test
     void testValidate_Success_WithIfExists() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
         change.setIfExists(true);
@@ -68,7 +68,7 @@ class DropForeignKeyConstraintChangeTest {
     @Test
     void testValidate_Success_WithAllOptions() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseSchemaName("public");
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
@@ -82,7 +82,7 @@ class DropForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenBaseTableNameNull() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName(null);
         change.setConstraintName("fk_orders_users");
 
@@ -97,7 +97,7 @@ class DropForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenBaseTableNameBlank() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("   ");
         change.setConstraintName("fk_orders_users");
 
@@ -112,7 +112,7 @@ class DropForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenConstraintNameNull() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("orders");
         change.setConstraintName(null);
 
@@ -127,7 +127,7 @@ class DropForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenConstraintNameBlank() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("orders");
         change.setConstraintName("   ");
 

@@ -91,7 +91,7 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: true
-        - addForeignKeyConstraint:
+        - addForeignKey:
             constraintName: fk_products_category
             baseTableName: products
             baseColumnNames: category_id
@@ -100,7 +100,7 @@ databaseChangeLog:
             onDelete: SET NULL
             onUpdate: CASCADE
       rollback:
-        - dropForeignKeyConstraint:
+        - dropForeignKey:
             constraintName: fk_products_category
             baseTableName: products
         - dropColumn:

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class AddForeignKeyConstraintChange implements Change {
+public class AddForeignKeyChange implements Change {
     private String baseTableName;
     private String baseSchemaName;
     private List<String> baseColumnNames;
@@ -22,22 +22,22 @@ public class AddForeignKeyConstraintChange implements Change {
 
     @Override
     public String getChangeType() {
-        return "addForeignKeyConstraint";
+        return "addForeignKey";
     }
 
     @Override
     public void validate() throws IllegalArgumentException {
         if (baseTableName == null || baseTableName.isBlank()) {
-            throw new IllegalArgumentException("baseTableName is required for addForeignKeyConstraint");
+            throw new IllegalArgumentException("baseTableName is required for addForeignKey");
         }
         if (baseColumnNames == null || baseColumnNames.isEmpty()) {
-            throw new IllegalArgumentException("At least one base column is required for addForeignKeyConstraint");
+            throw new IllegalArgumentException("At least one base column is required for addForeignKey");
         }
         if (referencedTableName == null || referencedTableName.isBlank()) {
-            throw new IllegalArgumentException("referencedTableName is required for addForeignKeyConstraint");
+            throw new IllegalArgumentException("referencedTableName is required for addForeignKey");
         }
         if (referencedColumnNames == null || referencedColumnNames.isEmpty()) {
-            throw new IllegalArgumentException("At least one referenced column is required for addForeignKeyConstraint");
+            throw new IllegalArgumentException("At least one referenced column is required for addForeignKey");
         }
         if (baseColumnNames.size() != referencedColumnNames.size()) {
             throw new IllegalArgumentException("Number of base columns must match number of referenced columns");

@@ -7,24 +7,24 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AddForeignKeyConstraintChangeTest {
+class AddForeignKeyChangeTest {
 
     @Test
     void testGetChangeType() {
         // Given
-        AddForeignKeyConstraintChange change = new AddForeignKeyConstraintChange();
+        AddForeignKeyChange change = new AddForeignKeyChange();
 
         // When
         String result = change.getChangeType();
 
         // Then
-        assertEquals("addForeignKeyConstraint", result);
+        assertEquals("addForeignKey", result);
     }
 
     @Test
     void testValidate_Success_MinimalConfiguration() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
 
         // When & Then
         assertDoesNotThrow(() -> change.validate());
@@ -33,7 +33,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_Success_WithSchema() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setBaseSchemaName("public");
         change.setReferencedSchemaName("public");
 
@@ -44,7 +44,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_Success_WithConstraintName() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setConstraintName("fk_orders_users");
 
         // When & Then
@@ -54,7 +54,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_Success_WithOnDelete() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setOnDelete("CASCADE");
 
         // When & Then
@@ -64,7 +64,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_Success_WithOnUpdate() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setOnUpdate("RESTRICT");
 
         // When & Then
@@ -74,7 +74,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_Success_WithDeferrable() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setDeferrable(true);
         change.setInitiallyDeferred(true);
 
@@ -85,7 +85,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_Success_WithAllOptions() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setBaseSchemaName("public");
         change.setReferencedSchemaName("public");
         change.setConstraintName("fk_orders_users");
@@ -101,7 +101,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_Success_MultipleColumns() {
         // Given
-        AddForeignKeyConstraintChange change = new AddForeignKeyConstraintChange();
+        AddForeignKeyChange change = new AddForeignKeyChange();
         change.setBaseTableName("order_items");
         change.setBaseColumnNames(List.of("order_id", "product_id"));
         change.setReferencedTableName("orders");
@@ -114,7 +114,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_AllForeignKeyActions() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
 
         // Test all valid actions
         String[] validActions = {"CASCADE", "RESTRICT", "SET NULL", "SET DEFAULT", "NO ACTION"};
@@ -130,7 +130,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenBaseTableNameNull() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setBaseTableName(null);
 
         // When & Then
@@ -144,7 +144,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenBaseTableNameBlank() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setBaseTableName("   ");
 
         // When & Then
@@ -158,7 +158,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenBaseColumnsNull() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setBaseColumnNames(null);
 
         // When & Then
@@ -172,7 +172,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenBaseColumnsEmpty() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setBaseColumnNames(List.of());
 
         // When & Then
@@ -186,7 +186,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenReferencedTableNameNull() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setReferencedTableName(null);
 
         // When & Then
@@ -200,7 +200,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenReferencedTableNameBlank() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setReferencedTableName("   ");
 
         // When & Then
@@ -214,7 +214,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenReferencedColumnsNull() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setReferencedColumnNames(null);
 
         // When & Then
@@ -228,7 +228,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenReferencedColumnsEmpty() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setReferencedColumnNames(List.of());
 
         // When & Then
@@ -242,7 +242,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenColumnCountMismatch() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setBaseColumnNames(List.of("user_id", "product_id"));
         change.setReferencedColumnNames(List.of("id")); // Mismatch!
 
@@ -257,7 +257,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenBaseColumnNameBlank() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         List<String> columns = new ArrayList<>();
         columns.add("user_id");
         columns.add("   ");
@@ -275,7 +275,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenReferencedColumnNameBlank() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setBaseColumnNames(List.of("user_id", "product_id"));
         List<String> refColumns = new ArrayList<>();
         refColumns.add("id");
@@ -293,7 +293,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenInvalidOnDeleteAction() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setOnDelete("INVALID_ACTION");
 
         // When & Then
@@ -307,7 +307,7 @@ class AddForeignKeyConstraintChangeTest {
     @Test
     void testValidate_ThrowsException_WhenInvalidOnUpdateAction() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setOnUpdate("INVALID_ACTION");
 
         // When & Then
@@ -318,8 +318,8 @@ class AddForeignKeyConstraintChangeTest {
         assertTrue(exception.getMessage().contains("Invalid onUpdate action"));
     }
 
-    private AddForeignKeyConstraintChange createSimpleChange() {
-        AddForeignKeyConstraintChange change = new AddForeignKeyConstraintChange();
+    private AddForeignKeyChange createSimpleChange() {
+        AddForeignKeyChange change = new AddForeignKeyChange();
         change.setBaseTableName("orders");
         change.setBaseColumnNames(List.of("user_id"));
         change.setReferencedTableName("users");

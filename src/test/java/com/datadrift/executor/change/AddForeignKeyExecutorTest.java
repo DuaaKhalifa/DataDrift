@@ -1,6 +1,6 @@
 package com.datadrift.executor.change;
 
-import com.datadrift.model.change.AddForeignKeyConstraintChange;
+import com.datadrift.model.change.AddForeignKeyChange;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,22 +14,22 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AddForeignKeyConstraintExecutorTest {
+class AddForeignKeyExecutorTest {
 
     @Mock
     private JdbcTemplate jdbcTemplate;
 
-    private AddForeignKeyConstraintExecutor executor;
+    private AddForeignKeyExecutor executor;
 
     @BeforeEach
     void setUp() {
-        executor = new AddForeignKeyConstraintExecutor(jdbcTemplate);
+        executor = new AddForeignKeyExecutor(jdbcTemplate);
     }
 
     @Test
     void testExecute_SimpleForeignKey() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
 
         // When
         executor.execute(change);
@@ -41,7 +41,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_SimpleForeignKey() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
 
         // When
         String sql = executor.generateSql(change);
@@ -57,7 +57,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithSchema() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setBaseSchemaName("public");
         change.setReferencedSchemaName("public");
 
@@ -72,7 +72,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithCustomConstraintName() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setConstraintName("fk_custom_name");
 
         // When
@@ -85,7 +85,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_AutoGeneratesConstraintName() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setConstraintName(null);
 
         // When
@@ -98,7 +98,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithOnDelete() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setOnDelete("CASCADE");
 
         // When
@@ -111,7 +111,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithOnUpdate() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setOnUpdate("RESTRICT");
 
         // When
@@ -124,7 +124,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithOnDeleteAndOnUpdate() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setOnDelete("CASCADE");
         change.setOnUpdate("RESTRICT");
 
@@ -139,7 +139,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithDeferrable() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setDeferrable(true);
         change.setInitiallyDeferred(false);
 
@@ -153,7 +153,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithDeferrableInitiallyDeferred() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setDeferrable(true);
         change.setInitiallyDeferred(true);
 
@@ -167,7 +167,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithoutDeferrable() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setDeferrable(false);
 
         // When
@@ -180,7 +180,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_MultipleColumns() {
         // Given
-        AddForeignKeyConstraintChange change = new AddForeignKeyConstraintChange();
+        AddForeignKeyChange change = new AddForeignKeyChange();
         change.setBaseTableName("order_items");
         change.setBaseColumnNames(List.of("order_id", "product_id"));
         change.setReferencedTableName("orders");
@@ -197,7 +197,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_CompleteExample() {
         // Given
-        AddForeignKeyConstraintChange change = new AddForeignKeyConstraintChange();
+        AddForeignKeyChange change = new AddForeignKeyChange();
         change.setBaseSchemaName("public");
         change.setBaseTableName("orders");
         change.setBaseColumnNames(List.of("user_id"));
@@ -226,7 +226,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_EscapesIdentifiers() {
         // Given
-        AddForeignKeyConstraintChange change = new AddForeignKeyConstraintChange();
+        AddForeignKeyChange change = new AddForeignKeyChange();
         change.setBaseTableName("order_table");
         change.setBaseColumnNames(List.of("user_id_column"));
         change.setReferencedTableName("user_table");
@@ -245,7 +245,7 @@ class AddForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_OnActionsCaseInsensitive() {
         // Given
-        AddForeignKeyConstraintChange change = createSimpleChange();
+        AddForeignKeyChange change = createSimpleChange();
         change.setOnDelete("cascade");
         change.setOnUpdate("restrict");
 
@@ -264,7 +264,7 @@ class AddForeignKeyConstraintExecutorTest {
 
         for (String action : actions) {
             // Given
-            AddForeignKeyConstraintChange change = createSimpleChange();
+            AddForeignKeyChange change = createSimpleChange();
             change.setOnDelete(action);
 
             // When
@@ -276,8 +276,8 @@ class AddForeignKeyConstraintExecutorTest {
         }
     }
 
-    private AddForeignKeyConstraintChange createSimpleChange() {
-        AddForeignKeyConstraintChange change = new AddForeignKeyConstraintChange();
+    private AddForeignKeyChange createSimpleChange() {
+        AddForeignKeyChange change = new AddForeignKeyChange();
         change.setBaseTableName("orders");
         change.setBaseColumnNames(List.of("user_id"));
         change.setReferencedTableName("users");

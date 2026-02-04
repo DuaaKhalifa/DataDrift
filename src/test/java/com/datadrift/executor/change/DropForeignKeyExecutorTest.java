@@ -1,6 +1,6 @@
 package com.datadrift.executor.change;
 
-import com.datadrift.model.change.DropForeignKeyConstraintChange;
+import com.datadrift.model.change.DropForeignKeyChange;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,22 +12,22 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class DropForeignKeyConstraintExecutorTest {
+class DropForeignKeyExecutorTest {
 
     @Mock
     private JdbcTemplate jdbcTemplate;
 
-    private DropForeignKeyConstraintExecutor executor;
+    private DropForeignKeyExecutor executor;
 
     @BeforeEach
     void setUp() {
-        executor = new DropForeignKeyConstraintExecutor(jdbcTemplate);
+        executor = new DropForeignKeyExecutor(jdbcTemplate);
     }
 
     @Test
     void testExecute_SimpleDropForeignKey() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
 
@@ -41,7 +41,7 @@ class DropForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_SimpleDropForeignKey() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
 
@@ -56,7 +56,7 @@ class DropForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithSchema() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseSchemaName("public");
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
@@ -71,7 +71,7 @@ class DropForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithIfExists() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
         change.setIfExists(true);
@@ -86,7 +86,7 @@ class DropForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithCascade() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
         change.setCascade(true);
@@ -101,7 +101,7 @@ class DropForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithIfExistsAndCascade() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
         change.setIfExists(true);
@@ -117,7 +117,7 @@ class DropForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithSchemaAndAllOptions() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseSchemaName("public");
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
@@ -134,7 +134,7 @@ class DropForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithCascadeFalse() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
         change.setCascade(false);
@@ -150,7 +150,7 @@ class DropForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_WithIfExistsFalse() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("orders");
         change.setConstraintName("fk_orders_users");
         change.setIfExists(false);
@@ -166,7 +166,7 @@ class DropForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_EscapesTableName() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("order_table");
         change.setConstraintName("fk_custom");
 
@@ -180,7 +180,7 @@ class DropForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_EscapesSchemaAndTableName() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseSchemaName("my_schema");
         change.setBaseTableName("my_table");
         change.setConstraintName("my_constraint");
@@ -196,7 +196,7 @@ class DropForeignKeyConstraintExecutorTest {
     @Test
     void testGenerateSql_EscapesConstraintName() {
         // Given
-        DropForeignKeyConstraintChange change = new DropForeignKeyConstraintChange();
+        DropForeignKeyChange change = new DropForeignKeyChange();
         change.setBaseTableName("orders");
         change.setConstraintName("fk_constraint_name");
 

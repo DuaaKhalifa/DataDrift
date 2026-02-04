@@ -1,6 +1,6 @@
 package com.datadrift.executor.change;
 
-import com.datadrift.model.change.AddForeignKeyConstraintChange;
+import com.datadrift.model.change.AddForeignKeyChange;
 import com.datadrift.util.SqlEscapeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,14 +30,14 @@ import java.util.stream.Collectors;
  *   COMMIT;  -- constraint checked here, passes
  */
 @Slf4j
-@Component("addForeignKeyConstraint")
+@Component("addForeignKey")
 @RequiredArgsConstructor
-public class AddForeignKeyConstraintExecutor implements ChangeExecutor<AddForeignKeyConstraintChange> {
+public class AddForeignKeyExecutor implements ChangeExecutor<AddForeignKeyChange> {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public void execute(AddForeignKeyConstraintChange change) {
+    public void execute(AddForeignKeyChange change) {
         String sql = generateSql(change);
         String qualifiedBaseTable = SqlEscapeUtil.qualifiedName(change.getBaseSchemaName(), change.getBaseTableName());
 
@@ -50,7 +50,7 @@ public class AddForeignKeyConstraintExecutor implements ChangeExecutor<AddForeig
     }
 
     @Override
-    public String generateSql(AddForeignKeyConstraintChange change) {
+    public String generateSql(AddForeignKeyChange change) {
         StringBuilder sql = new StringBuilder();
         sql.append("ALTER TABLE ");
 
@@ -128,7 +128,7 @@ public class AddForeignKeyConstraintExecutor implements ChangeExecutor<AddForeig
         return sql.toString();
     }
 
-    private String generateConstraintName(AddForeignKeyConstraintChange change) {
+    private String generateConstraintName(AddForeignKeyChange change) {
         // Generate name like: fk_basetable_reftable
         String baseTable = change.getBaseTableName().toLowerCase();
         String refTable = change.getReferencedTableName().toLowerCase();

@@ -1,6 +1,6 @@
 package com.datadrift.executor.change;
 
-import com.datadrift.model.change.DropForeignKeyConstraintChange;
+import com.datadrift.model.change.DropForeignKeyChange;
 import com.datadrift.util.SqlEscapeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,14 +8,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component("dropForeignKeyConstraint")
+@Component("dropForeignKey")
 @RequiredArgsConstructor
-public class DropForeignKeyConstraintExecutor implements ChangeExecutor<DropForeignKeyConstraintChange> {
+public class DropForeignKeyExecutor implements ChangeExecutor<DropForeignKeyChange> {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public void execute(DropForeignKeyConstraintChange change) {
+    public void execute(DropForeignKeyChange change) {
         String sql = generateSql(change);
         String qualifiedBaseTable = SqlEscapeUtil.qualifiedName(change.getBaseSchemaName(), change.getBaseTableName());
 
@@ -29,7 +29,7 @@ public class DropForeignKeyConstraintExecutor implements ChangeExecutor<DropFore
     }
 
     @Override
-    public String generateSql(DropForeignKeyConstraintChange change) {
+    public String generateSql(DropForeignKeyChange change) {
         StringBuilder sql = new StringBuilder();
         sql.append("ALTER TABLE ");
 
