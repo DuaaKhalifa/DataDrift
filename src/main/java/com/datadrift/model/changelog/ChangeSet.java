@@ -20,5 +20,6 @@ public class ChangeSet {
     private String labels;
     private boolean runAlways;
     private boolean runOnChange;
-    private boolean failOnError;
+    private boolean failOnError = true;
+    private String filename;
 }
