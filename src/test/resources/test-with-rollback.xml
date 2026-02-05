@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.datadrift.com/xml/ns/dbchangelog">
+    <changeSet id="001" author="test">
+        <dropTable tableName="users"/>
+        <rollback>
+            <sql>CREATE TABLE users (id int);</sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

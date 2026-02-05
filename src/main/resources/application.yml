@@ -16,6 +16,10 @@ spring:
       max-lifetime: 1800000
       pool-name: DataDriftHikariPool
 
+datadrift:
+  changelog:
+    directory: classpath:db/changelog/
+
 logging:
   level:
     root: INFO

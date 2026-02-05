@@ -64,6 +64,17 @@ public class ChangeSetLoader {
         return changes;
     }
 
+    /**
+     * Resolves XML tag name to Change class using naming convention:
+     * - Tag name: "createTable" → Class name: "CreateTableChange"
+     * - Tag name: "dropTable" → Class name: "DropTableChange"
+     * - Tag name: "addColumn" → Class name: "AddColumnChange"
+     *
+     * Convention: capitalize(tagName) + "Change"
+     *
+     * This eliminates the need for a ChangeFactory registry — as long as the
+     * class name matches the tag name, it's automatically discoverable via reflection.
+     */
     @SuppressWarnings("unchecked")
     private Class<? extends Change> resolveChangeClass(String tagName) {
         String className = CHANGE_CLASS_PREFIX

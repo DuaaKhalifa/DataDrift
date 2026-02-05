@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.datadrift.com/xml/ns/dbchangelog">
+    <changeSet id="001" author="alice">
+        <dropTable tableName="t1"/>
+    </changeSet>
+    <changeSet id="002" author="bob">
+        <dropTable tableName="t2"/>
+    </changeSet>
+</databaseChangeLog>

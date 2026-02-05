@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.datadrift.com/xml/ns/dbchangelog">
+    <changeSet id="001" author="test">
+        <sql><![CDATA[INSERT INTO users VALUES ('O''Brien');]]></sql>
+    </changeSet>
+</databaseChangeLog>
