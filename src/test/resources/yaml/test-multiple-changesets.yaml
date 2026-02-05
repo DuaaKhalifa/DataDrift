@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: "001"
+      author: alice
+      changes:
+        - dropTable:
+            tableName: t1
+  - changeSet:
+      id: "002"
+      author: bob
+      changes:
+        - dropTable:
+            tableName: t2

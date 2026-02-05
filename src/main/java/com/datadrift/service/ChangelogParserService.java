@@ -1,6 +1,7 @@
 package com.datadrift.service;
 
 import com.datadrift.model.changelog.ChangeSet;
+import com.datadrift.parser.ChangelogParser;
 import com.datadrift.parser.xml.XmlChangelogParser;
 import com.datadrift.parser.yaml.YamlChangelogParser;
 import lombok.extern.slf4j.Slf4j;
@@ -22,15 +23,13 @@ import java.util.List;
     ↓
     Scans classpath:db/changelog/, sorts by filename
     ↓
-    For each .xml file:
+    For each .xml or .yaml file:
       ↓
-      XmlChangelogParser.parse(file)
+      ChangelogParser.parse(file)  // XmlChangelogParser or YamlChangelogParser
         ↓
-        DOM parses XML, finds all <changeSet> elements
+        Format-specific parsing → ParsedNode tree
         ↓
         For each <changeSet>:
-          ↓
-          convertElement(domElement) → ParsedNode tree
           ↓
           ChangeSetLoader.load(parsedNode)
             ↓
@@ -66,7 +65,9 @@ import java.util.List;
 
   ---
   - ChangelogParserService → understands files and directories
+  - ChangelogParser (interface) → contract for format-specific parsers
   - XmlChangelogParser → understands DOM and XML
+  - YamlChangelogParser → understands YAML maps and lists
   - ChangeSetLoader → understands ParsedNode and ChangeSet
   - PropertyMapper → understands ParsedNode and Change subclasses
   */
@@ -74,8 +75,8 @@ import java.util.List;
 @Service
 public class ChangelogParserService {
 
-    private final XmlChangelogParser xmlParser;
-    private final YamlChangelogParser yamlParser;
+    private final ChangelogParser xmlParser;
+    private final ChangelogParser yamlParser;
     private final ResourceLoader resourceLoader;
     private final String changelogDirectory;
 

@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: "001"
+      author: test
+      changes:
+        - dropTable:
+            tableName: users
+      rollback:
+        - sql:
+            sql: "CREATE TABLE users (id int);"

@@ -2,6 +2,7 @@ package com.datadrift.parser.xml;
 
 import com.datadrift.model.changelog.ChangeSet;
 import com.datadrift.parser.ChangeSetLoader;
+import com.datadrift.parser.ChangelogParser;
 import com.datadrift.parser.ParsedNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,17 +22,18 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class XmlChangelogParser {
+public class XmlChangelogParser implements ChangelogParser {
 
     private final ChangeSetLoader changeSetLoader;
 
+    @Override
     public List<ChangeSet> parse(File xmlFile) {
         log.info("Parsing XML changelog: {}", xmlFile.getName());
 
         Document doc = parseXml(xmlFile);
 
         List<ChangeSet> changeSets = new ArrayList<>();
-        NodeList changeSetNodes = doc.getElementsByTagName("changeSet");
+        NodeList changeSetNodes = doc.getElementsByTagName(ELEMENT_CHANGESET);
 
         for (int i = 0; i < changeSetNodes.getLength(); i++) {
             ParsedNode parsedNode = convertElement((Element) changeSetNodes.item(i));
