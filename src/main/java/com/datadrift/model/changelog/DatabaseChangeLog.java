@@ -20,7 +20,7 @@ public class DatabaseChangeLog {
     private String description;
     private String comments;
     private String tag;
-    private String liquibase;
+    private String version;
     private String contexts;
     private String labels;
     private String deploymentId;

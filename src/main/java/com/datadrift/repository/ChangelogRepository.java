@@ -3,9 +3,12 @@ package com.datadrift.repository;
 import com.datadrift.model.changelog.DatabaseChangeLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -19,78 +22,140 @@ public class ChangelogRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    /**
-     * Find all executed changesets.
-     *
-     * Should:
-     * 1. Query: SELECT * FROM DATABASECHANGELOG ORDER BY orderexecuted
-     * 2. Map each row to DatabaseChangeLog object
-     * 3. Return list of all executed changesets
-     */
+    private final RowMapper<DatabaseChangeLog> rowMapper = (rs, rowNum) -> {
+        DatabaseChangeLog changeLog = new DatabaseChangeLog();
+        changeLog.setId(rs.getString("id"));
+        changeLog.setAuthor(rs.getString("author"));
+        changeLog.setFilename(rs.getString("filename"));
+        Timestamp dateExecuted = rs.getTimestamp("dateexecuted");
+        changeLog.setDateExecuted(dateExecuted != null ? dateExecuted.toLocalDateTime() : null);
+        changeLog.setOrderExecuted(rs.getInt("orderexecuted"));
+        changeLog.setExecType(rs.getString("exectype"));
+        changeLog.setMd5sum(rs.getString("md5sum"));
+        changeLog.setDescription(rs.getString("description"));
+        changeLog.setComments(rs.getString("comments"));
+        changeLog.setTag(rs.getString("tag"));
+        changeLog.setVersion(rs.getString("version"));
+        changeLog.setContexts(rs.getString("contexts"));
+        changeLog.setLabels(rs.getString("labels"));
+        changeLog.setDeploymentId(rs.getString("deployment_id"));
+        return changeLog;
+    };
+
     public List<DatabaseChangeLog> findAll() {
-        // TODO: Implement findAll
-        return null;
+        ensureChangeLogTableExists();
+        return jdbcTemplate.query(
+                "SELECT * FROM DATABASECHANGELOG ORDER BY orderexecuted",
+                rowMapper
+        );
     }
 
-    /**
-     * Find changesets by ID and author.
-     *
-     * Should:
-     * 1. Query: SELECT * FROM DATABASECHANGELOG WHERE id = ? AND author = ?
-     * 2. Map result to DatabaseChangeLog object
-     * 3. Return the changeset or null if not found
-     */
     public DatabaseChangeLog findByIdAndAuthor(String id, String author) {
-        // TODO: Implement findByIdAndAuthor
-        return null;
+        ensureChangeLogTableExists();
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM DATABASECHANGELOG WHERE id = ? AND author = ?",
+                    rowMapper,
+                    id, author
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
-    /**
-     * Save a changeset execution record.
-     *
-     * Should:
-     * 1. Insert into DATABASECHANGELOG with all fields
-     * 2. Use prepared statement to prevent SQL injection
-     * 3. Return the saved record
-     */
     public DatabaseChangeLog save(DatabaseChangeLog changeLog) {
-        // TODO: Implement save
-        return null;
+        ensureChangeLogTableExists();
+
+        jdbcTemplate.update(
+                "INSERT INTO DATABASECHANGELOG " +
+                        "(id, author, filename, dateexecuted, orderexecuted, exectype, md5sum, " +
+                        "description, comments, tag, version, contexts, labels, deployment_id) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                changeLog.getId(),
+                changeLog.getAuthor(),
+                changeLog.getFilename(),
+                changeLog.getDateExecuted() != null ? Timestamp.valueOf(changeLog.getDateExecuted()) : null,
+                changeLog.getOrderExecuted(),
+                changeLog.getExecType(),
+                changeLog.getMd5sum(),
+                changeLog.getDescription(),
+                changeLog.getComments(),
+                changeLog.getTag(),
+                changeLog.getVersion(),
+                changeLog.getContexts(),
+                changeLog.getLabels(),
+                changeLog.getDeploymentId()
+        );
+
+        log.debug("Saved changelog entry: {}::{}", changeLog.getId(), changeLog.getAuthor());
+        return changeLog;
     }
 
-    /**
-     * Delete a changeset record (for rollback).
-     *
-     * Should:
-     * 1. DELETE FROM DATABASECHANGELOG WHERE id = ? AND author = ?
-     * 2. Return number of deleted rows
-     */
     public int delete(String id, String author) {
-        // TODO: Implement delete
-        return 0;
+        int deleted = jdbcTemplate.update(
+                "DELETE FROM DATABASECHANGELOG WHERE id = ? AND author = ?",
+                id, author
+        );
+        if (deleted > 0) {
+            log.debug("Deleted changelog entry: {}::{}", id, author);
+        }
+        return deleted;
     }
 
-    /**
-     * Find changesets by tag.
-     *
-     * Should:
-     * 1. Query: SELECT * FROM DATABASECHANGELOG WHERE tag = ?
-     * 2. Return list of changesets with that tag
-     */
     public List<DatabaseChangeLog> findByTag(String tag) {
-        // TODO: Implement findByTag
-        return null;
+        ensureChangeLogTableExists();
+        return jdbcTemplate.query(
+                "SELECT * FROM DATABASECHANGELOG WHERE tag = ? ORDER BY orderexecuted",
+                rowMapper,
+                tag
+        );
     }
 
-    /**
-     * Get the last N executed changesets.
-     *
-     * Should:
-     * 1. Query: SELECT * FROM DATABASECHANGELOG ORDER BY orderexecuted DESC LIMIT ?
-     * 2. Return list of last N changesets
-     */
     public List<DatabaseChangeLog> findLastN(int count) {
-        // TODO: Implement findLastN
-        return null;
+        ensureChangeLogTableExists();
+        return jdbcTemplate.query(
+                "SELECT * FROM DATABASECHANGELOG ORDER BY orderexecuted DESC LIMIT ?",
+                rowMapper,
+                count
+        );
+    }
+
+    public int getMaxOrderExecuted() {
+        ensureChangeLogTableExists();
+        Integer max = jdbcTemplate.queryForObject(
+                "SELECT COALESCE(MAX(orderexecuted), 0) FROM DATABASECHANGELOG",
+                Integer.class
+        );
+        return max != null ? max : 0;
+    }
+
+    public List<DatabaseChangeLog> findAfterOrder(int orderExecuted) {
+        ensureChangeLogTableExists();
+        return jdbcTemplate.query(
+                "SELECT * FROM DATABASECHANGELOG WHERE orderexecuted > ? ORDER BY orderexecuted DESC",
+                rowMapper,
+                orderExecuted
+        );
+    }
+
+    private void ensureChangeLogTableExists() {
+        jdbcTemplate.execute(
+                "CREATE TABLE IF NOT EXISTS DATABASECHANGELOG (" +
+                        "id VARCHAR(255) NOT NULL, " +
+                        "author VARCHAR(255) NOT NULL, " +
+                        "filename VARCHAR(255) NOT NULL, " +
+                        "dateexecuted TIMESTAMP NOT NULL, " +
+                        "orderexecuted INT NOT NULL, " +
+                        "exectype VARCHAR(50) NOT NULL, " +
+                        "md5sum VARCHAR(50), " +
+                        "description VARCHAR(255), " +
+                        "comments VARCHAR(255), " +
+                        "tag VARCHAR(255), " +
+                        "version VARCHAR(50), " +
+                        "contexts VARCHAR(255), " +
+                        "labels VARCHAR(255), " +
+                        "deployment_id VARCHAR(50), " +
+                        "PRIMARY KEY (id, author, filename))"
+        );
     }
 }

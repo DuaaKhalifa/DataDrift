@@ -19,6 +19,9 @@ spring:
 datadrift:
   changelog:
     directory: classpath:db/changelog/
+  lock:
+    max-retry-attempts: 5
+    retry-delay-ms: 1000
 
 logging:
   level:
