@@ -24,19 +24,31 @@ public class MigrateCommand implements Callable<Integer> {
 
     private final MigrationService migrationService;
 
-    /**
-     * Execute the migrate command.
-     *
-     * Should:
-     * 1. Log start of migration
-     * 2. Call migrationService.migrate()
-     * 3. Handle exceptions and print error messages
-     * 4. Print success message
-     * 5. Return 0 for success, 1 for failure
-     */
     @Override
     public Integer call() {
-        // TODO: Implement migrate command
-        return 0;
+        log.info("Starting database migration...");
+        System.out.println("DataDrift - Executing pending migrations");
+        System.out.println();
+
+        try {
+            int executedCount = migrationService.migrate();
+
+            if (executedCount == 0) {
+                log.info("No pending migrations found");
+                System.out.println("No pending migrations to execute.");
+            } else {
+                log.info("Successfully executed {} changeset(s)", executedCount);
+                System.out.println("Successfully executed " + executedCount + " changeset(s).");
+            }
+            System.out.println();
+            System.out.println("Migration completed successfully.");
+            return 0;
+
+        } catch (Exception e) {
+            log.error("Migration failed: {}", e.getMessage(), e);
+            System.err.println();
+            System.err.println("Migration FAILED: " + e.getMessage());
+            return 1;
+        }
     }
 }
