@@ -83,6 +83,7 @@
         <xs:attribute name="defaultValueBoolean" type="xs:boolean"/>
         <xs:attribute name="defaultValueNumeric" type="xs:decimal"/>
         <xs:attribute name="defaultValueComputed" type="xs:string"/>
+        <xs:attribute name="defaultValueExpression" type="xs:string"/>
         <xs:attribute name="autoIncrement" type="xs:boolean" default="false"/>
         <xs:attribute name="remarks" type="xs:string"/>
     </xs:complexType>

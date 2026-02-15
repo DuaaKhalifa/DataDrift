@@ -54,6 +54,7 @@ public class CreateTableChange implements Change {
         private Object defaultValue;
         private Boolean autoIncrement;
         private String defaultValueComputed;
+        private String defaultValueExpression;
         private ConstraintsConfig constraints;
         private String remarks;
     }

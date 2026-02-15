@@ -28,12 +28,17 @@ public class ColumnDefinitionBuilder {
         // Column name and type
         parts.add(SqlEscapeUtil.escapeIdentifier(column.getName()) + " " + column.getType());
 
-        // Generated/computed column (takes precedence over default)
+        // Generated/computed column (derived from other columns)
         if (column.getDefaultValueComputed() != null && !column.getDefaultValueComputed().isBlank()) {
             SqlEscapeUtil.validateExpression(column.getDefaultValueComputed());
             parts.add(dialect.getGeneratedColumnSyntax(column.getDefaultValueComputed(), true));
         }
-        // Default value
+        // Default SQL expression (e.g., CURRENT_TIMESTAMP, NOW())
+        else if (column.getDefaultValueExpression() != null && !column.getDefaultValueExpression().isBlank()) {
+            SqlEscapeUtil.validateExpression(column.getDefaultValueExpression());
+            parts.add("DEFAULT " + column.getDefaultValueExpression());
+        }
+        // Default literal value
         else if (column.getDefaultValue() != null) {
             parts.add("DEFAULT " + formatDefaultValue(column.getDefaultValue()));
         }

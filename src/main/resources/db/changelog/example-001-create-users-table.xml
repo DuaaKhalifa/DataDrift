@@ -22,10 +22,10 @@
             <column name="password_hash" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <column name="created_at" type="TIMESTAMP" defaultValueExpression="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <column name="updated_at" type="TIMESTAMP" defaultValueExpression="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column name="is_active" type="BOOLEAN" defaultValueBoolean="true">
@@ -39,48 +39,6 @@
 
         <rollback>
             <dropTable tableName="users"/>
-        </rollback>
-    </changeSet>
-
-    <!-- Example changeset: Add role column -->
-    <changeSet id="002" author="john.doe">
-        <comment>Add role column to users table</comment>
-
-        <addColumn tableName="users">
-            <column name="role" type="VARCHAR(50)" defaultValue="USER">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-
-        <rollback>
-            <dropColumn tableName="users" columnName="role"/>
-        </rollback>
-    </changeSet>
-
-    <!-- Example changeset: Custom SQL -->
-    <changeSet id="003" author="jane.smith">
-        <comment>Create custom function for updating timestamp</comment>
-
-        <sql>
-            CREATE OR REPLACE FUNCTION update_updated_at_column()
-            RETURNS TRIGGER AS $$
-            BEGIN
-                NEW.updated_at = CURRENT_TIMESTAMP;
-                RETURN NEW;
-            END;
-            $$ LANGUAGE plpgsql;
-        </sql>
-
-        <sql>
-            CREATE TRIGGER update_users_updated_at
-            BEFORE UPDATE ON users
-            FOR EACH ROW
-            EXECUTE FUNCTION update_updated_at_column();
-        </sql>
-
-        <rollback>
-            <sql>DROP TRIGGER IF EXISTS update_users_updated_at ON users;</sql>
-            <sql>DROP FUNCTION IF EXISTS update_updated_at_column();</sql>
         </rollback>
     </changeSet>
 
