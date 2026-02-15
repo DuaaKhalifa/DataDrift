@@ -3,9 +3,9 @@ spring:
     name: datadrift
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/datadrift
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://localhost:5432/testdb
+    username: duaa
+    password: secret
     driver-class-name: org.postgresql.Driver
 
     hikari:

@@ -14,7 +14,7 @@ public class CreateTableChange implements Change {
     private String schemaName;
     private String remarks;
     private List<ColumnConfig> columns;
-    private List<String> primaryKeyColumns;
+    private List<String> primaryKeyColumns = List.of();
     private Boolean ifNotExist;
     private List<UniqueConstraint> uniqueConstraints;
     private List<TableCheckConstraint> checkConstraints;
@@ -34,10 +34,15 @@ public class CreateTableChange implements Change {
         }
         boolean hasColumnLevelPk = columns.stream().anyMatch(col -> Objects.nonNull(col.getConstraints())
         && Boolean.TRUE.equals(col.getConstraints().isPrimaryKey()));
-        boolean hasTableLevelPk = primaryKeyColumns.isEmpty();
-        if (!hasColumnLevelPk && hasTableLevelPk) {
+        boolean hasTableLevelPk = !primaryKeyColumns.isEmpty();
+        if (hasColumnLevelPk && hasTableLevelPk) {
             throw new IllegalArgumentException(
                     "Cannot have both column-level and table-level primary key. Use column-level for single PK, table-level for composite PK."
+            );
+        }
+        if (!hasColumnLevelPk && !hasTableLevelPk) {
+            throw new IllegalArgumentException(
+                    "A primary key is required. Define it at column-level or table-level."
             );
         }
     }
