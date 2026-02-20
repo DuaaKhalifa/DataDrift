@@ -23,6 +23,7 @@ public class ChangeSetLoader {
         ChangeSet changeSet = new ChangeSet();
         changeSet.setId(attrs.get("id"));
         changeSet.setAuthor(attrs.get("author"));
+        changeSet.setTag(attrs.get("tag"));
         changeSet.setContext(attrs.get("context"));
         changeSet.setLabels(attrs.get("labels"));
 

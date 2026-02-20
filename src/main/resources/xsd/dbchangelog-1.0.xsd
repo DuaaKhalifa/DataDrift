@@ -46,6 +46,7 @@
         <xs:attribute name="failOnError" type="xs:boolean" default="true"/>
         <xs:attribute name="context" type="xs:string"/>
         <xs:attribute name="labels" type="xs:string"/>
+        <xs:attribute name="tag" type="xs:string"/>
     </xs:complexType>
 
     <!-- Rollback Type -->

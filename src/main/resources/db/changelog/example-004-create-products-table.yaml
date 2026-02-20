@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 001
+      id: "004"
       author: sarah.jones
       comment: Create products table for e-commerce
       changes:
@@ -41,13 +41,13 @@ databaseChangeLog:
               - column:
                   name: created_at
                   type: TIMESTAMP
-                  defaultValueComputed: CURRENT_TIMESTAMP
+                  defaultValueExpression: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
               - column:
                   name: updated_at
                   type: TIMESTAMP
-                  defaultValueComputed: CURRENT_TIMESTAMP
+                  defaultValueExpression: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
         - createIndex:
@@ -59,105 +59,3 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: products
-
-  - changeSet:
-      id: 002
-      author: sarah.jones
-      comment: Create categories table and add foreign key to products
-      changes:
-        - createTable:
-            tableName: categories
-            columns:
-              - column:
-                  name: id
-                  type: BIGSERIAL
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: name
-                  type: VARCHAR(100)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
-                  name: description
-                  type: TEXT
-        - addColumn:
-            tableName: products
-            columns:
-              - column:
-                  name: category_id
-                  type: BIGINT
-                  constraints:
-                    nullable: true
-        - addForeignKey:
-            constraintName: fk_products_category
-            baseTableName: products
-            baseColumnNames: category_id
-            referencedTableName: categories
-            referencedColumnNames: id
-            onDelete: SET NULL
-            onUpdate: CASCADE
-      rollback:
-        - dropForeignKey:
-            constraintName: fk_products_category
-            baseTableName: products
-        - dropColumn:
-            tableName: products
-            columnName: category_id
-        - dropTable:
-            tableName: categories
-
-  - changeSet:
-      id: 003
-      author: sarah.jones
-      comment: Add check constraint for positive price
-      changes:
-        - sql:
-            sql: |
-              ALTER TABLE products
-              ADD CONSTRAINT chk_products_price_positive
-              CHECK (price > 0);
-      rollback:
-        - sql:
-            sql: |
-              ALTER TABLE products
-              DROP CONSTRAINT IF EXISTS chk_products_price_positive;
-
-  - changeSet:
-      id: 004
-      author: mike.brown
-      comment: Insert initial categories
-      changes:
-        - insert:
-            tableName: categories
-            columns:
-              - column:
-                  name: name
-                  value: Electronics
-              - column:
-                  name: description
-                  value: Electronic devices and accessories
-        - insert:
-            tableName: categories
-            columns:
-              - column:
-                  name: name
-                  value: Clothing
-              - column:
-                  name: description
-                  value: Apparel and fashion items
-        - insert:
-            tableName: categories
-            columns:
-              - column:
-                  name: name
-                  value: Books
-              - column:
-                  name: description
-                  value: Physical and digital books
-      rollback:
-        - delete:
-            tableName: categories
-            where: name IN ('Electronics', 'Clothing', 'Books')

@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: "007"
+      author: mike.brown
+      comment: Insert initial categories
+      changes:
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: Electronics
+              - column:
+                  name: description
+                  value: Electronic devices and accessories
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: Clothing
+              - column:
+                  name: description
+                  value: Apparel and fashion items
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: Books
+              - column:
+                  name: description
+                  value: Physical and digital books
+      rollback:
+        - delete:
+            tableName: categories
+            where: name IN ('Electronics', 'Clothing', 'Books')

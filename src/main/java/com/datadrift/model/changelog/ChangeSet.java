@@ -13,6 +13,7 @@ import java.util.List;
 public class ChangeSet {
     private String id;
     private String author;
+    private String tag;
     private String comment;
     private List<Change> changes;
     private List<Change> rollbackChanges;

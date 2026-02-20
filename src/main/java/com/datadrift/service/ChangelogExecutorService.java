@@ -167,6 +167,7 @@ public class ChangelogExecutorService {
         record.setMd5sum(ChecksumUtil.calculateChecksum(changeSet));
         record.setDescription(buildDescription(changeSet));
         record.setComments(changeSet.getComment());
+        record.setTag(changeSet.getTag());
         record.setVersion(DATADRIFT_VERSION);
         record.setContexts(changeSet.getContext());
         record.setLabels(changeSet.getLabels());

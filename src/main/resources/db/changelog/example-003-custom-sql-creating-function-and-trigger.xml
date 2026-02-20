@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.datadrift.com/xml/ns/dbchangelog
         ../../xsd/dbchangelog-1.0.xsd">
     <!-- Example changeset: Custom SQL -->
-    <changeSet id="003" author="jane.smith">
+    <changeSet id="003" author="jane.smith" tag="v1.0">
         <comment>Create custom function for updating timestamp</comment>
 
         <sql>

@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: "005"
+      author: sarah.jones
+      comment: Create categories table and add foreign key to products
+      changes:
+        - createTable:
+            tableName: categories
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: description
+                  type: TEXT
+        - addColumn:
+            tableName: products
+            columns:
+              - column:
+                  name: category_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+        - addForeignKey:
+            constraintName: fk_products_category
+            baseTableName: products
+            baseColumnNames: category_id
+            referencedTableName: categories
+            referencedColumnNames: id
+            onDelete: SET NULL
+            onUpdate: CASCADE
+      rollback:
+        - dropForeignKey:
+            constraintName: fk_products_category
+            baseTableName: products
+        - dropColumn:
+            tableName: products
+            columnName: category_id
+        - dropTable:
+            tableName: categories
