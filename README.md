@@ -1,17 +1,23 @@
 # DataDrift
 
-A modern database change management tool built with Java and Spring Boot. DataDrift provides version control for database schemas, migration management, and safe rollback mechanisms.
+![Java](https://img.shields.io/badge/Java-21-orange?style=flat&logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.1-brightgreen?style=flat&logo=springboot)
+![Maven](https://img.shields.io/badge/Maven-3.9.8-C71A36?style=flat&logo=apachemaven)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat&logo=postgresql)
+![License](https://img.shields.io/badge/License-MIT-blue?style=flat)
+
+A database change management tool built with Java and Spring Boot. DataDrift provides version control for database schemas, migration management, and safe rollback mechanisms.
 
 ## Tech Stack
 
 - **Java**: 21
 - **Build Tool**: Maven 3.9.8
-- **Framework**: Spring Boot 3.2.1 (JDBC only)
+- **Framework**: Spring Boot 3.2.1 
 - **Database**: PostgreSQL with JDBC and HikariCP connection pool
 - **CLI**: Picocli 4.7.5
 - **Logging**: SLF4J with Logback
-- **Testing**: JUnit 5, Mockito, Testcontainers 1.19.3, JMH 1.37
-- **XML Parsing**: JAXB and Jackson XML 2.16.1
+- **Testing**: JUnit 5, Mockito
+- **XML/YAML Parsing**: DOM Parser, SnakeYAML
 - **CI/CD**: GitHub Actions
 
 ## Prerequisites
@@ -161,7 +167,7 @@ databaseChangeLog:
             tableName: users
 ```
 
-See `src/main/resources/db/changelog/example-002-create-products-table.yaml` for a complete example.
+See `src/main/resources/db/changelog/example-004-create-products-table.yaml` for a complete example.
 
 ### Rollback Support
 
@@ -301,8 +307,6 @@ java -jar target/datadrift-1.0.0-SNAPSHOT.jar rollback --count=N
 # Generate SQL preview
 java -jar target/datadrift-1.0.0-SNAPSHOT.jar generate-sql
 
-# Tag current database state
-java -jar target/datadrift-1.0.0-SNAPSHOT.jar tag --name=v1.0.0
 ```
 
 ## Architecture

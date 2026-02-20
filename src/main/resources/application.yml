@@ -1,4 +1,6 @@
 spring:
+  main:
+    banner-mode: off
   application:
     name: datadrift
 
@@ -18,15 +20,14 @@ spring:
 
 datadrift:
   changelog:
-    directory: classpath:db/changelog/
+    directory: file:./changelog/
   lock:
     max-retry-attempts: 5
     retry-delay-ms: 1000
 
 logging:
   level:
-    root: INFO
-    com.datadrift: DEBUG
+    root: WARN
+    com.datadrift: WARN
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%msg%n"
