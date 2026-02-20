@@ -1,5 +1,6 @@
 # DataDrift
 
+![Build](https://github.com/DuaaKhalifa/DataDrift/actions/workflows/build.yml/badge.svg)
 ![Java](https://img.shields.io/badge/Java-21-orange?style=flat&logo=openjdk)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.1-brightgreen?style=flat&logo=springboot)
 ![Maven](https://img.shields.io/badge/Maven-3.9.8-C71A36?style=flat&logo=apachemaven)
@@ -31,7 +32,7 @@ A database change management tool built with Java and Spring Boot. DataDrift pro
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/DataDrift.git
+git clone https://github.com/DuaaKhalifa/DataDrift.git
 cd DataDrift
 ```
 
